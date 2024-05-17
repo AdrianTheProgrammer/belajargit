@@ -8,5 +8,5 @@ func main() {
 	fmt.Println("Masukkan Nama Anda:")
 	fmt.Scanln(&nama)
 
-	fmt.Println("Hello", nama, ", Saya Golang, bahasa yang sangat menyenangkan.")
+	fmt.Println("Hello", nama, "! Saya Golang, bahasa yang sangat menyenangkan.")
 }
