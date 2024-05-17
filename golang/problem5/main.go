@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 func main() {
 	var tinggi float64
@@ -11,7 +14,7 @@ func main() {
 	fmt.Println("Masukkan Jari-Jari Tabung:")
 	fmt.Scanln(&radius)
 
-	var luas float64 = 2*3.14*radius*radius + 2*3.14*radius*tinggi
+	var luas float64 = 2*3.14*math.Pow(radius, 2) + 2*3.14*radius*tinggi
 
 	fmt.Println("Luas Permukaan Tabung Adalah:", luas)
 }
