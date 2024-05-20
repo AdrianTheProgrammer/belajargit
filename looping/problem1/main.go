@@ -28,9 +28,3 @@ func main() {
 		fmt.Println("Nilai Tidak Valid")
 	}
 }
-
-// 80 > 100 : A
-// 65 > 79 : B+
-// 50 > 64 : B
-// 35 > 49 : C
-// 0 > 34 : D
