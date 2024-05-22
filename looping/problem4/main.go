@@ -1,18 +1,23 @@
 package main
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"os"
+)
 
 func main() {
-	var kata string
 	var palindrome bool
+	kata := bufio.NewScanner(os.Stdin)
 
 	fmt.Print("Masukkan kata: ")
-	fmt.Scanln(&kata)
+	kata.Scan()
 
-	var bantuan2 int = len(kata)
+	katatext := kata.Text()
+	var bantuan2 int = len(katatext)
 
-	for bantuan := 0; bantuan <= (len(kata)/2)-1; bantuan++ {
-		if kata[bantuan] == kata[bantuan2-1] {
+	for bantuan := 0; bantuan <= (len(katatext)/2)-1; bantuan++ {
+		if katatext[bantuan] == katatext[bantuan2-1] {
 			palindrome = true
 		} else {
 			palindrome = false
@@ -21,9 +26,9 @@ func main() {
 		bantuan2--
 	}
 
-	if palindrome == true {
-		fmt.Println("Kata", kata, "adalah sebuah Palindrome")
+	if palindrome {
+		fmt.Println("Kata", katatext, "ADALAH sebuah Palindrome")
 	} else {
-		fmt.Println("Kata", kata, "bukanlah sebuah Palindrome")
+		fmt.Println("Kata", katatext, "BUKANLAH sebuah Palindrome")
 	}
 }
