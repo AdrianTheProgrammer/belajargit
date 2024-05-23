@@ -13,29 +13,33 @@ func main() {
 	kata.Scan()
 
 	var geser int
-	fmt.Print("Masukkan nilai pergeseran (Pos=R, Neg=L): ")
+	fmt.Print("Masukkan nilai pergeseran: ")
 	fmt.Scanln(&geser)
 
-	enkripsi := []string{}
 	kata_bytes := kata.Bytes()
+	enkripsi := []string{}
 
+	caesar_cipher(geser, kata_bytes, enkripsi)
+}
+
+func caesar_cipher(geser int, kata_bytes []uint8, enkripsi []string) {
 	for i := 0; i < len(kata_bytes); i++ {
 		if kata_bytes[i] != 32 {
 			if kata_bytes[i] >= 65 && kata_bytes[i] <= 90 {
-				if kata_bytes[i]+byte(geser) > 90 {
-					enkripsi = append(enkripsi, string(kata_bytes[i]+byte(geser)-26))
-				} else if kata_bytes[i]+byte(geser) < 65 {
-					enkripsi = append(enkripsi, string(kata_bytes[i]+byte(geser)+26))
+				if kata_bytes[i]+byte(geser%26) > 90 {
+					enkripsi = append(enkripsi, string(kata_bytes[i]+byte(geser%26)-26))
+				} else if kata_bytes[i]+byte(geser%26) < 65 {
+					enkripsi = append(enkripsi, string(kata_bytes[i]+byte(geser%26)+26))
 				} else {
-					enkripsi = append(enkripsi, string(kata_bytes[i]+byte(geser)))
+					enkripsi = append(enkripsi, string(kata_bytes[i]+byte(geser%26)))
 				}
 			} else if kata_bytes[i] >= 97 && kata_bytes[i] <= 122 {
-				if kata_bytes[i]+byte(geser) > 122 {
-					enkripsi = append(enkripsi, string(kata_bytes[i]+byte(geser)-26))
-				} else if kata_bytes[i]+byte(geser) < 97 {
-					enkripsi = append(enkripsi, string(kata_bytes[i]+byte(geser)+26))
+				if kata_bytes[i]+byte(geser%26) > 122 {
+					enkripsi = append(enkripsi, string(kata_bytes[i]+byte(geser%26)-26))
+				} else if kata_bytes[i]+byte(geser%26) < 97 {
+					enkripsi = append(enkripsi, string(kata_bytes[i]+byte(geser%26)+26))
 				} else {
-					enkripsi = append(enkripsi, string(kata_bytes[i]+byte(geser)))
+					enkripsi = append(enkripsi, string(kata_bytes[i]+byte(geser%26)))
 				}
 			}
 		} else {
@@ -43,5 +47,5 @@ func main() {
 		}
 	}
 
-	fmt.Println(strings.Join(enkripsi, ""))
+	fmt.Println("Caesar Cipher:", strings.Join(enkripsi, ""))
 }
