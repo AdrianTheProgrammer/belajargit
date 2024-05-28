@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	//"strings"
+	"strings"
 )
 
 func main() {
@@ -16,28 +16,26 @@ func main() {
 	fmt.Print("Masukkan kata kedua: ")
 	kata2.Scan()
 
-	fmt.Println(kata1.Bytes())
-
-	//compare_string(kata1, kata2)
+	compare_string(kata1, kata2)
 }
 
-// func compare_string(kata1 *bufio.Scanner, kata2 *bufio.Scanner) {
-// 	var hasil []string
+func compare_string(kata1 *bufio.Scanner, kata2 *bufio.Scanner) {
+	var hasil []string
 
-// 	if len(kata1.Bytes()) > len(kata2.Bytes()) {
-// 		for i := 0; i < len(kata2.Bytes()); i++ {
-// 			if kata1.Text()[i] == kata2.Text()[i] {
-// 				hasil = append(hasil, string(kata1.Text()[i]))
-// 			}
-// 		}
-// 	} else {
-// 		for i := 0; i < len(kata1.Bytes()); i++ {
-// 			if kata1.Text()[i] == kata2.Text()[i] {
-// 				hasil = append(hasil, string(kata1.Text()[i]))
-// 			}
-// 		}
-// 	}
+	if len(kata1.Bytes()) > len(kata2.Bytes()) {
+		for i := 0; i < len(kata2.Bytes()); i++ {
+			if kata1.Text()[i] == kata2.Text()[i] {
+				hasil = append(hasil, string(kata1.Text()[i]))
+			}
+		}
+	} else {
+		for i := 0; i < len(kata1.Bytes()); i++ {
+			if kata1.Text()[i] == kata2.Text()[i] {
+				hasil = append(hasil, string(kata1.Text()[i]))
+			}
+		}
+	}
 
-// 	fmt.Println("=====================================")
-// 	fmt.Println("String yang sama adalah:", strings.Join(hasil, ""))
-// }
+	fmt.Println("=====================================")
+	fmt.Println("String yang sama adalah:", strings.Join(hasil, ""))
+}
