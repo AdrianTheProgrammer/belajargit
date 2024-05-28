@@ -31,5 +31,5 @@ func slice_max(slice []int, jarak int) {
 		end++
 	}
 
-	fmt.Println("Angka tertinggi adalah:", slices.Max(max))
+	fmt.Println("Sum tertinggi adalah:", slices.Max(max))
 }
