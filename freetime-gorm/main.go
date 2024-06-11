@@ -22,13 +22,9 @@ func main() {
 
 	// db.Create(&users)
 	// db.Save(&users)
-	db.Delete(&users)
+	// db.Delete(&users)
 	read(db)
 }
-
-// func create() {
-
-// }
 
 func read(db *gorm.DB) {
 	var users []users
@@ -39,14 +35,6 @@ func read(db *gorm.DB) {
 		fmt.Println(value)
 	}
 }
-
-// func update() {
-
-// }
-
-// func delete() {
-
-// }
 
 type users struct {
 	ID         int
