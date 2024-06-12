@@ -1,6 +1,10 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"fmt"
+
+	"gorm.io/gorm"
+)
 
 type Todo struct {
 	gorm.Model
@@ -19,16 +23,24 @@ func NewTodoModel(connection *gorm.DB) *TodoModel {
 	}
 }
 
-func (tm *TodoModel) AddTodo(newData Todo) (Todo, error) {
+func (add *TodoModel) AddTodo(newData Todo) {
 	newData.Mark = false
-	err := tm.db.Create(&newData).Error
+	err := add.db.Create(&newData).Error
 	if err != nil {
-		return Todo{}, err
+		fmt.Println(err)
 	}
-
-	return newData, nil
 }
 
-func (update *TodoModel) UpdateTodo(id int, mark bool) {
-	update.db.Where("id = ?", id).Update(&mark)
+func (read *TodoModel) ReadTodo(user_id uint) []Todo {
+	var todo []Todo
+	read.db.Where("owner = ?", user_id).Find(&todo)
+	return todo
+}
+
+func (update *TodoModel) UpdateTodo(user_id uint, todo_id int) {
+	update.db.Model(&Todo{}).Where("id = ? AND owner = ?", todo_id, user_id).Update("mark", true)
+}
+
+func (delete *TodoModel) DeleteTodo(user_id uint, todo_id int) {
+	delete.db.Where("id = ? AND owner = ?", todo_id, user_id).Delete(&Todo{})
 }
