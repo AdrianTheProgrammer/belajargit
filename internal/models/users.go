@@ -25,11 +25,11 @@ type Users struct {
 func (um *UsersMod) Register(user Users) error {
 	err := um.db.Create(&user).Error
 
-	if err == nil {
-		return nil
+	if err != nil {
+		return err
 	}
 
-	return err
+	return nil
 }
 
 func (um *UsersMod) Login(user Users) (Users, error) {
@@ -37,7 +37,7 @@ func (um *UsersMod) Login(user Users) (Users, error) {
 	err := um.db.Where("username = ? AND password = ?", user.Username, user.Password).First(&result).Error
 
 	if err != nil {
-		return Users{}, err
+		return result, err
 	}
 
 	return result, nil
