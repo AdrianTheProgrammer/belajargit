@@ -13,11 +13,25 @@ type connection struct {
 	Host, User, Password, DBName, Port string
 }
 
+func ImportPasskey() string {
+	var passkey string
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		fmt.Println(err)
+		return passkey
+	}
+
+	passkey = os.Getenv("passkey")
+	return passkey
+}
+
 func ImportSettings() connection {
 	var result connection
 	err := godotenv.Load(".env")
 
 	if err != nil {
+		fmt.Println(err)
 		return result
 	}
 

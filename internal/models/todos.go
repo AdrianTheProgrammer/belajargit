@@ -34,7 +34,7 @@ func (um *TodosMod) CreateTodo(todo Todos) error {
 	return err
 }
 
-func (um *TodosMod) ReadAllTodos(userID string) ([]Todos, error) {
+func (um *TodosMod) ReadAllTodos(userID uint) ([]Todos, error) {
 	var todos []Todos
 	err := um.db.Where("user_id = ?", userID).Find(&todos).Error
 

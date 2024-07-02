@@ -7,13 +7,17 @@ import (
 	"github/internal/controllers/users"
 	"github/internal/models"
 
+	"github.com/golang-jwt/jwt/v5"
+	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
 	e := echo.New()
 
 	db := configs.ConnectDB()
+	passkey := configs.ImportPasskey()
 
 	var input int
 	fmt.Print("Input '1' to Migrate Database: ")
@@ -29,12 +33,28 @@ func main() {
 	uc := users.NewUsersCon(um)
 	tc := todos.NewTodosCon(tm)
 
+	// USERS
 	e.POST("/users/register", uc.Register)
 	e.POST("/users/login", uc.Login)
-	e.POST("/todos/create", tc.CreateTodo)
-	e.GET("/todos/readall/:user_id", tc.ReadAllTodos)
-	e.PUT("/todos/update/:id", tc.UpdateTodo)
-	e.DELETE("/todos/delete/:id", tc.DeleteTodo)
 
-	e.Start(":5000")
+	// TODOS
+	t := e.Group("/todos")
+	t.Use(echojwt.WithConfig(
+		echojwt.Config{
+			SigningKey:    []byte(passkey),
+			SigningMethod: jwt.SigningMethodHS256.Name,
+		},
+	))
+	t.POST("/create", tc.CreateTodo)
+	t.GET("/read_all", tc.ReadAllTodos)
+	t.PUT("/update/:id", tc.UpdateTodo)
+	t.DELETE("/delete/:id", tc.DeleteTodo)
+
+	// MIDDLEWARE
+	e.Pre(middleware.RemoveTrailingSlash())
+	e.Use(middleware.Logger())
+	e.Use(middleware.CORS())
+
+	// START
+	e.Logger.Error(e.Start(":5000"))
 }

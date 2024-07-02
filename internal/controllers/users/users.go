@@ -1,6 +1,7 @@
 package users
 
 import (
+	"github/internal/controllers/utils"
 	"github/internal/helpers"
 	"github/internal/models"
 
@@ -18,33 +19,38 @@ func NewUsersCon(m *models.UsersMod) *UsersCon {
 }
 
 func (uc *UsersCon) Register(c echo.Context) error {
-	var user models.Users
+	var user RegisterRequest
+
 	err := c.Bind(&user)
-
 	if err != nil {
-		return c.JSON(400, "Input Error!")
+		return c.JSON(400, helpers.ResponseFormat(400, "Input Error!", nil))
 	}
 
-	err = uc.model.Register(user)
-
+	err = uc.model.Register(ToModelUsers(user))
 	if err != nil {
-		return c.JSON(500, "Server Error!")
+		return c.JSON(500, helpers.ResponseFormat(500, "Server Error!", nil))
 	}
 
-	return c.JSON(201, "Data Inserted Successfully!")
+	return c.JSON(201, helpers.ResponseFormat(201, "Data Inserted Successfully!", nil))
 }
 
 func (uc *UsersCon) Login(c echo.Context) error {
-	var user models.Users
+	var user LoginRequest
+
 	err := c.Bind(&user)
 	if err != nil {
-		return c.JSON(400, "Input Error!")
+		return c.JSON(400, helpers.ResponseFormat(400, "Input Error!", nil))
 	}
-	result, err := uc.model.Login(user)
 
+	result, err := uc.model.Login(user.Username, user.Password)
 	if err != nil {
-		return c.JSON(500, "Server Error!")
+		return c.JSON(500, helpers.ResponseFormat(500, "Server Error!", nil))
 	}
 
-	return c.JSON(200, helpers.ResponseFormat(200, "success login", ToLoginReponse(result)))
+	token, err := utils.GenerateToken(result)
+	if err != nil {
+		return c.JSON(500, helpers.ResponseFormat(500, "Privacy Error!", nil))
+	}
+
+	return c.JSON(200, helpers.ResponseFormat(200, "Login Success!", ToLoginReponse(result, token)))
 }

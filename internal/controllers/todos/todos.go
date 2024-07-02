@@ -1,10 +1,12 @@
 package todos
 
 import (
+	"github/internal/controllers/utils"
 	"github/internal/helpers"
 	"github/internal/models"
 	"strconv"
 
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 )
 
@@ -19,14 +21,16 @@ func NewTodosCon(m *models.TodosMod) *TodosCon {
 }
 
 func (uc *TodosCon) CreateTodo(c echo.Context) error {
-	var user models.Todos
-	err := c.Bind(&user)
+	LoginData := utils.DecodeToken(c.Get("user").(*jwt.Token))
+
+	var todo TodosRequest
+	err := c.Bind(&todo)
 
 	if err != nil {
 		return c.JSON(400, helpers.ResponseFormat(201, "Input Error!", nil))
 	}
 
-	err = uc.model.CreateTodo(user)
+	err = uc.model.CreateTodo(ToModelTodos(todo, LoginData.ID))
 
 	if err != nil {
 		return c.JSON(500, helpers.ResponseFormat(500, "Server Error!", nil))
@@ -36,7 +40,7 @@ func (uc *TodosCon) CreateTodo(c echo.Context) error {
 }
 
 func (uc *TodosCon) ReadAllTodos(c echo.Context) error {
-	userID := c.Param("user_id")
+	LoginData := utils.DecodeToken(c.Get("user").(*jwt.Token))
 	var todos []models.Todos
 	err := c.Bind(&todos)
 
@@ -44,7 +48,7 @@ func (uc *TodosCon) ReadAllTodos(c echo.Context) error {
 		return c.JSON(400, helpers.ResponseFormat(400, "Input Error!", nil))
 	}
 
-	todos, err = uc.model.ReadAllTodos(userID)
+	todos, err = uc.model.ReadAllTodos(LoginData.ID)
 
 	if err != nil {
 		return c.JSON(500, helpers.ResponseFormat(500, "Server Error!", nil))
