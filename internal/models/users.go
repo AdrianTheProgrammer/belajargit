@@ -32,9 +32,9 @@ func (um *UsersMod) Register(user Users) error {
 	return nil
 }
 
-func (um *UsersMod) Login(username, password string) (Users, error) {
+func (um *UsersMod) Login(username string) (Users, error) {
 	var result Users
-	err := um.db.Where("username = ? AND password = ?", username, password).First(&result).Error
+	err := um.db.Where("username = ?", username).First(&result).Error
 
 	if err != nil {
 		return result, err

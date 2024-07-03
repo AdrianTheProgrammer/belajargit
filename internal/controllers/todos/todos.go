@@ -1,9 +1,9 @@
 package todos
 
 import (
-	"github/internal/controllers/utils"
 	"github/internal/helpers"
 	"github/internal/models"
+	"github/internal/utils"
 	"strconv"
 
 	"github.com/golang-jwt/jwt/v5"
