@@ -11,7 +11,7 @@ type UsersHand struct {
 	srv users.Services
 }
 
-func NewUsersHand(s *users.Services) *users.Handlers {
+func NewUsersHand(s users.Services) users.Handlers {
 	return &UsersHand{
 		srv: s,
 	}
@@ -42,7 +42,7 @@ func (uh *UsersHand) Login(c echo.Context) error {
 		return c.JSON(400, helpers.ResponseFormat(400, "Input Error!", nil))
 	}
 
-	// Services
+	result, token, err := uh.srv.Login(user.Username, user.Password)
 
 	if err != nil {
 		return c.JSON(404, helpers.ResponseFormat(404, "User Not Found!", nil))

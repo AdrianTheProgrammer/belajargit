@@ -1,6 +1,6 @@
 package handlers
 
-import "github/internal/features/users/repositories"
+import "github/internal/features/users"
 
 type LoginResponse struct {
 	ID       uint   `json:"id"`
@@ -11,7 +11,7 @@ type LoginResponse struct {
 	Token    string `json:"token"`
 }
 
-func ToLoginReponse(user repositories.Users, token string) LoginResponse {
+func ToLoginReponse(user users.Users, token string) LoginResponse {
 	return LoginResponse{
 		ID:       user.ID,
 		Username: user.Username,

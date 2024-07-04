@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"github/internal/features/users"
+
 	"gorm.io/gorm"
 )
 
@@ -14,8 +16,9 @@ func NewUsersQue(connection *gorm.DB) *UsersQue {
 	}
 }
 
-func (uq *UsersQue) Register(user Users) error {
-	err := uq.db.Create(&user).Error
+func (uq *UsersQue) Register(user users.Users) error {
+	cnv := ToUsersData(user)
+	err := uq.db.Create(&cnv).Error
 
 	if err != nil {
 		return err

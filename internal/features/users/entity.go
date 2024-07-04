@@ -11,13 +11,13 @@ type Users struct {
 }
 
 type Handlers interface {
-	Register() echo.HandlerFunc
-	Login() echo.HandlerFunc
+	Register(echo.Context) error
+	Login(echo.Context) error
 }
 
 type Services interface {
 	Register(user Users) error
-	Login(username string, password string) (Users, string, error)
+	Login(username, password string) (Users, string, error)
 }
 
 type Query interface {

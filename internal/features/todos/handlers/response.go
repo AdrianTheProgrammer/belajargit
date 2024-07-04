@@ -1,7 +1,7 @@
-package todos
+package handlers
 
 import (
-	"github/internal/models"
+	"github/internal/features/todos"
 	"time"
 )
 
@@ -13,7 +13,7 @@ type AllTodos struct {
 	UserID   uint      `json:"user_id"`
 }
 
-func ToAllTodos(todos []models.Todos) []AllTodos {
+func ToAllTodos(todos []todos.Todos) []AllTodos {
 	var result []AllTodos
 
 	for _, val := range todos {

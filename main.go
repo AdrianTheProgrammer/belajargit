@@ -3,9 +3,12 @@ package main
 import (
 	"fmt"
 	"github/configs"
-	"github/internal/controllers/todos"
-	"github/internal/controllers/users"
-	"github/internal/models"
+	todoshand "github/internal/features/todos/handlers"
+	todosrepo "github/internal/features/todos/repositories"
+	todosserv "github/internal/features/todos/services"
+	usershand "github/internal/features/users/handlers"
+	usersrepo "github/internal/features/users/repositories"
+	usersserv "github/internal/features/users/services"
 
 	"github.com/golang-jwt/jwt/v5"
 	echojwt "github.com/labstack/echo-jwt/v4"
@@ -24,18 +27,20 @@ func main() {
 	fmt.Scanln(&input)
 
 	if input == 1 {
-		db.AutoMigrate(&models.Users{}, &models.Todos{})
+		db.AutoMigrate(&usersrepo.Users{}, &todosrepo.Todos{})
 	}
 
-	um := models.NewUsersMod(db)
-	tm := models.NewTodosMod(db)
+	ur := usersrepo.NewUsersQue(db)
+	us := usersserv.NewUsersSer(ur)
+	uh := usershand.NewUsersHand(us)
 
-	uc := users.NewUsersCon(um)
-	tc := todos.NewTodosCon(tm)
+	tr := todosrepo.NewTodosQue(db)
+	ts := todosserv.NewTodosSer(ur)
+	th := todoshand.NewTodosHand(ts)
 
 	// USERS
-	e.POST("/users/register", uc.Register)
-	e.POST("/users/login", uc.Login)
+	e.POST("/users/register", uh.Register)
+	e.POST("/users/login", uh.Login)
 
 	// TODOS
 	t := e.Group("/todos")
@@ -45,10 +50,10 @@ func main() {
 			SigningMethod: jwt.SigningMethodHS256.Name,
 		},
 	))
-	t.POST("/create", tc.CreateTodo)
-	t.GET("/read_all", tc.ReadAllTodos)
-	t.PUT("/update/:id", tc.UpdateTodo)
-	t.DELETE("/delete/:id", tc.DeleteTodo)
+	t.POST("/create", th.CreateTodo)
+	t.GET("/read_all", th.ReadAllTodos)
+	t.PUT("/update/:id", th.UpdateTodo)
+	t.DELETE("/delete/:id", th.DeleteTodo)
 
 	// MIDDLEWARE
 	e.Pre(middleware.RemoveTrailingSlash())

@@ -1,8 +1,9 @@
-package todos
+package handlers
 
 import (
+	"github/internal/features/todos"
+	"github/internal/features/todos/repositories"
 	"github/internal/helpers"
-	"github/internal/models"
 	"github/internal/utils"
 	"strconv"
 
@@ -10,17 +11,17 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type TodosCon struct {
-	model *models.TodosMod
+type TodosHand struct {
+	srv todos.Services
 }
 
-func NewTodosCon(m *models.TodosMod) *TodosCon {
-	return &TodosCon{
-		model: m,
+func NewTodosHand(s todos.Services) todos.Handlers {
+	return &TodosHand{
+		srv: s,
 	}
 }
 
-func (uc *TodosCon) CreateTodo(c echo.Context) error {
+func (th *TodosHand) CreateTodo(c echo.Context) error {
 	LoginData := utils.DecodeToken(c.Get("user").(*jwt.Token))
 
 	var todo TodosRequest
@@ -30,7 +31,7 @@ func (uc *TodosCon) CreateTodo(c echo.Context) error {
 		return c.JSON(400, helpers.ResponseFormat(201, "Input Error!", nil))
 	}
 
-	err = uc.model.CreateTodo(ToModelTodos(todo, LoginData.ID))
+	err = th.srv.CreateTodo(repositories.ToTodosEntity(ToRepoTodos(todo, LoginData.ID)))
 
 	if err != nil {
 		return c.JSON(500, helpers.ResponseFormat(500, "Server Error!", nil))
@@ -39,16 +40,10 @@ func (uc *TodosCon) CreateTodo(c echo.Context) error {
 	return c.JSON(201, helpers.ResponseFormat(201, "Data Inserted Successfully!", nil))
 }
 
-func (uc *TodosCon) ReadAllTodos(c echo.Context) error {
+func (th *TodosHand) ReadAllTodos(c echo.Context) error {
 	LoginData := utils.DecodeToken(c.Get("user").(*jwt.Token))
-	var todos []models.Todos
-	err := c.Bind(&todos)
 
-	if err != nil {
-		return c.JSON(400, helpers.ResponseFormat(400, "Input Error!", nil))
-	}
-
-	todos, err = uc.model.ReadAllTodos(LoginData.ID)
+	todos, err := th.srv.ReadAllTodos(LoginData.ID)
 
 	if err != nil {
 		return c.JSON(500, helpers.ResponseFormat(500, "Server Error!", nil))
@@ -57,19 +52,23 @@ func (uc *TodosCon) ReadAllTodos(c echo.Context) error {
 	return c.JSON(200, helpers.ResponseFormat(200, "Activities Retrieved Successfully!", ToAllTodos(todos)))
 }
 
-func (uc *TodosCon) UpdateTodo(c echo.Context) error {
+func (th *TodosHand) UpdateTodo(c echo.Context) error {
 	id := c.Param("id")
 	idconv, _ := strconv.Atoi(id)
 
-	var todo models.Todos
-	todo.ID = uint(idconv)
+	var todo TodosRequest
 	err := c.Bind(&todo)
 
 	if err != nil {
 		return c.JSON(400, helpers.ResponseFormat(400, "Input Error!", nil))
 	}
 
-	err = uc.model.UpdateTodo(todo)
+	var todocnv todos.Todos
+	todocnv.Activity = todo.Activity
+	todocnv.Date = todo.Date
+	todocnv.Status = todo.Status
+
+	err = th.srv.UpdateTodo(uint(idconv), todocnv)
 
 	if err != nil {
 		return c.JSON(500, helpers.ResponseFormat(500, "Server Error!", nil))
@@ -78,10 +77,10 @@ func (uc *TodosCon) UpdateTodo(c echo.Context) error {
 	return c.JSON(200, helpers.ResponseFormat(200, "Activity Updated Successfully!", nil))
 }
 
-func (uc *TodosCon) DeleteTodo(c echo.Context) error {
-	id := c.Param("id")
+func (th *TodosHand) DeleteTodo(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
 
-	err := uc.model.DeleteTodo(id)
+	err := th.srv.DeleteTodo(uint(id))
 
 	if err != nil {
 		return c.JSON(500, helpers.ResponseFormat(500, "Server Error!", nil))
