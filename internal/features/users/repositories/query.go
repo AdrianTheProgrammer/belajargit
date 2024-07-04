@@ -10,7 +10,7 @@ type UsersQue struct {
 	db *gorm.DB
 }
 
-func NewUsersQue(connection *gorm.DB) *UsersQue {
+func NewUsersQue(connection *gorm.DB) users.Query {
 	return &UsersQue{
 		db: connection,
 	}
@@ -27,13 +27,14 @@ func (uq *UsersQue) Register(user users.Users) error {
 	return nil
 }
 
-func (uq *UsersQue) Login(username string) (Users, error) {
+func (uq *UsersQue) Login(username string) (users.Users, error) {
 	var result Users
 	err := uq.db.Where("username = ?", username).First(&result).Error
+	rescnv := ToUsersEntity(result)
 
 	if err != nil {
-		return result, err
+		return users.Users{}, err
 	}
 
-	return result, nil
+	return rescnv, nil
 }

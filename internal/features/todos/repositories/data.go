@@ -25,6 +25,22 @@ func ToTodosEntity(input Todos) todos.Todos {
 	}
 }
 
+func ToAllTodosEntity(alltodos []Todos) []todos.Todos {
+	var result []todos.Todos
+
+	for _, val := range alltodos {
+		result = append(result, todos.Todos{
+			ID:       val.ID,
+			Activity: val.Activity,
+			Date:     val.Date,
+			Status:   val.Status,
+			UserID:   val.UserID,
+		})
+	}
+
+	return result
+}
+
 func ToTodosData(input todos.Todos) Todos {
 	return Todos{
 		Activity: input.Activity,

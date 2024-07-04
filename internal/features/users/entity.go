@@ -16,11 +16,11 @@ type Handlers interface {
 }
 
 type Services interface {
-	Register(user Users) error
-	Login(username, password string) (Users, string, error)
+	Register(Users) error
+	Login(string, string) (Users, string, error)
 }
 
 type Query interface {
-	Register(user Users) error
-	Login(username string) (Users, error)
+	Register(Users) error
+	Login(string) (Users, error)
 }

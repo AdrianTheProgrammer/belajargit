@@ -30,12 +30,12 @@ func main() {
 		db.AutoMigrate(&usersrepo.Users{}, &todosrepo.Todos{})
 	}
 
-	ur := usersrepo.NewUsersQue(db)
-	us := usersserv.NewUsersSer(ur)
+	uq := usersrepo.NewUsersQue(db)
+	us := usersserv.NewUsersSer(uq)
 	uh := usershand.NewUsersHand(us)
 
-	tr := todosrepo.NewTodosQue(db)
-	ts := todosserv.NewTodosSer(ur)
+	tq := todosrepo.NewTodosQue(db)
+	ts := todosserv.NewTodosSer(tq)
 	th := todoshand.NewTodosHand(ts)
 
 	// USERS

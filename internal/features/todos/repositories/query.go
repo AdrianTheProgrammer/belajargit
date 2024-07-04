@@ -27,15 +27,15 @@ func (tq *TodosQue) CreateTodo(todo todos.Todos) error {
 	return nil
 }
 
-func (tq *TodosQue) ReadAllTodos(userID uint) ([]Todos, error) {
-	var todos []Todos
-	err := tq.db.Where("user_id = ?", userID).Find(&todos).Error
+func (tq *TodosQue) ReadAllTodos(userID uint) ([]todos.Todos, error) {
+	var alltodos []Todos
+	err := tq.db.Where("user_id = ?", userID).Find(&alltodos).Error
 
 	if err != nil {
-		return todos, err
+		return []todos.Todos{}, err
 	}
 
-	return todos, nil
+	return ToAllTodosEntity(alltodos), nil
 }
 
 func (tq *TodosQue) UpdateTodo(todo todos.Todos) error {

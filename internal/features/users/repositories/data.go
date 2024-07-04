@@ -14,13 +14,13 @@ type Users struct {
 	Phone    string `json:"phone"`
 }
 
-func (u *Users) ToUsersEntity() users.Users {
+func ToUsersEntity(input Users) users.Users {
 	return users.Users{
-		ID:       u.ID,
-		Username: u.Username,
-		Email:    u.Email,
-		Password: u.Password,
-		Phone:    u.Phone,
+		ID:       input.ID,
+		Username: input.Username,
+		Email:    input.Email,
+		Password: input.Password,
+		Phone:    input.Phone,
 	}
 }
 
