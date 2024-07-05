@@ -3,12 +3,13 @@ package main
 import (
 	"fmt"
 	"github/configs"
-	todoshand "github/internal/features/todos/handlers"
-	todosrepo "github/internal/features/todos/repositories"
-	todosserv "github/internal/features/todos/services"
-	usershand "github/internal/features/users/handlers"
-	usersrepo "github/internal/features/users/repositories"
-	usersserv "github/internal/features/users/services"
+	t_hnd "github/internal/features/todos/handlers"
+	t_rep "github/internal/features/todos/repositories"
+	t_srv "github/internal/features/todos/services"
+	u_hnd "github/internal/features/users/handlers"
+	u_rep "github/internal/features/users/repositories"
+	u_srv "github/internal/features/users/services"
+	"github/internal/utils"
 
 	"github.com/golang-jwt/jwt/v5"
 	echojwt "github.com/labstack/echo-jwt/v4"
@@ -27,16 +28,17 @@ func main() {
 	fmt.Scanln(&input)
 
 	if input == 1 {
-		db.AutoMigrate(&usersrepo.Users{}, &todosrepo.Todos{})
+		db.AutoMigrate(&u_rep.Users{}, &t_rep.Todos{})
 	}
+	pu := utils.NewPassUtil()
+	tu := utils.NewTokenUtil()
+	uq := u_rep.NewUsersQue(db)
+	us := u_srv.NewUsersSer(uq, pu, tu)
+	uh := u_hnd.NewUsersHand(us)
 
-	uq := usersrepo.NewUsersQue(db)
-	us := usersserv.NewUsersSer(uq)
-	uh := usershand.NewUsersHand(us)
-
-	tq := todosrepo.NewTodosQue(db)
-	ts := todosserv.NewTodosSer(tq)
-	th := todoshand.NewTodosHand(ts)
+	tq := t_rep.NewTodosQue(db)
+	ts := t_srv.NewTodosSer(tq)
+	th := t_hnd.NewTodosHand(ts, tu)
 
 	// USERS
 	e.POST("/users/register", uh.Register)

@@ -8,7 +8,18 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func GenerateToken(LoginData users.Users) (string, error) {
+type TokenUtilInterface interface {
+	GenerateToken(users.Users) (string, error)
+	DecodeToken(*jwt.Token) users.Users
+}
+
+type tokenUtil struct{}
+
+func NewTokenUtil() TokenUtilInterface {
+	return &tokenUtil{}
+}
+
+func (tu *tokenUtil) GenerateToken(LoginData users.Users) (string, error) {
 	claims := jwt.MapClaims{}
 	claims["id"] = LoginData.ID
 	claims["username"] = LoginData.Username
@@ -28,7 +39,7 @@ func GenerateToken(LoginData users.Users) (string, error) {
 	return result, nil
 }
 
-func DecodeToken(token *jwt.Token) users.Users {
+func (tu *tokenUtil) DecodeToken(token *jwt.Token) users.Users {
 	claims := token.Claims.(jwt.MapClaims)
 
 	var result users.Users

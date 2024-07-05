@@ -13,16 +13,18 @@ import (
 
 type TodosHand struct {
 	srv todos.Services
+	tu  utils.TokenUtilInterface
 }
 
-func NewTodosHand(s todos.Services) todos.Handlers {
+func NewTodosHand(s todos.Services, t utils.TokenUtilInterface) todos.Handlers {
 	return &TodosHand{
 		srv: s,
+		tu:  t,
 	}
 }
 
 func (th *TodosHand) CreateTodo(c echo.Context) error {
-	LoginData := utils.DecodeToken(c.Get("user").(*jwt.Token))
+	LoginData := th.tu.DecodeToken(c.Get("user").(*jwt.Token))
 
 	var todo TodosRequest
 	err := c.Bind(&todo)
@@ -41,7 +43,7 @@ func (th *TodosHand) CreateTodo(c echo.Context) error {
 }
 
 func (th *TodosHand) ReadAllTodos(c echo.Context) error {
-	LoginData := utils.DecodeToken(c.Get("user").(*jwt.Token))
+	LoginData := th.tu.DecodeToken(c.Get("user").(*jwt.Token))
 
 	todos, err := th.srv.ReadAllTodos(LoginData.ID)
 

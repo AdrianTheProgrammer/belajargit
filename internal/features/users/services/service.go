@@ -7,16 +7,20 @@ import (
 
 type UsersServices struct {
 	qry users.Query
+	pu  utils.PassUtilInterface
+	tu  utils.TokenUtilInterface
 }
 
-func NewUsersSer(q users.Query) users.Services {
+func NewUsersSer(q users.Query, p utils.PassUtilInterface, t utils.TokenUtilInterface) users.Services {
 	return &UsersServices{
 		qry: q,
+		pu:  p,
+		tu:  t,
 	}
 }
 
 func (us *UsersServices) Register(user users.Users) error {
-	hashedPass, err := utils.GeneratePassword(user.Password)
+	hashedPass, err := us.pu.GeneratePassword(user.Password)
 	if err != nil {
 		return err
 	}
@@ -30,17 +34,17 @@ func (us *UsersServices) Register(user users.Users) error {
 func (us *UsersServices) Login(username, password string) (users.Users, string, error) {
 	result, err := us.qry.Login(username)
 	if err != nil {
-		return users.Users{}, "", nil
+		return users.Users{}, "", err
 	}
 
-	err = utils.ComparePassword([]byte(result.Password), []byte(password))
+	err = us.pu.ComparePassword([]byte(result.Password), []byte(password))
 	if err != nil {
-		return users.Users{}, "", nil
+		return users.Users{}, "", err
 	}
 
-	token, err := utils.GenerateToken(result)
+	token, err := us.tu.GenerateToken(result)
 	if err != nil {
-		return users.Users{}, "", nil
+		return users.Users{}, "", err
 	}
 
 	return result, token, nil
