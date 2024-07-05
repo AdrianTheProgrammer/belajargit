@@ -31,6 +31,6 @@ type Services interface {
 type Query interface {
 	CreateTodo(Todos) error
 	ReadAllTodos(uint) ([]Todos, error)
-	UpdateTodo(Todos) error
+	UpdateTodo(uint, Todos) error
 	DeleteTodo(uint) error
 }

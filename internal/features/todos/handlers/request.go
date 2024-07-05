@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"github/internal/features/todos"
 	"github/internal/features/todos/repositories"
 	"time"
 )
@@ -17,5 +18,13 @@ func ToRepoTodos(tr TodosRequest, UserID uint) repositories.Todos {
 		Date:     tr.Date,
 		Status:   tr.Status,
 		UserID:   UserID,
+	}
+}
+
+func TodoReqToEntity(tr TodosRequest) todos.Todos {
+	return todos.Todos{
+		Activity: tr.Activity,
+		Date:     tr.Date,
+		Status:   tr.Status,
 	}
 }

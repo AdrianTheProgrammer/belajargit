@@ -23,8 +23,7 @@ func (ts *TodosServices) ReadAllTodos(userID uint) ([]todos.Todos, error) {
 }
 
 func (ts *TodosServices) UpdateTodo(todoID uint, todo todos.Todos) error {
-	todo.ID = todoID
-	return ts.qry.UpdateTodo(todo)
+	return ts.qry.UpdateTodo(todoID, todo)
 }
 
 func (ts *TodosServices) DeleteTodo(todoID uint) error {

@@ -31,7 +31,7 @@ func (uh *UsersHand) Register(c echo.Context) error {
 		return c.JSON(500, helpers.ResponseFormat(500, "Server Error!", nil))
 	}
 
-	return c.JSON(201, helpers.ResponseFormat(201, "Data Inserted Suhcessfully!", nil))
+	return c.JSON(201, helpers.ResponseFormat(201, "Data Inserted Successfully!", nil))
 }
 
 func (uh *UsersHand) Login(c echo.Context) error {

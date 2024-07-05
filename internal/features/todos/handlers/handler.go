@@ -63,12 +63,7 @@ func (th *TodosHand) UpdateTodo(c echo.Context) error {
 		return c.JSON(400, helpers.ResponseFormat(400, "Input Error!", nil))
 	}
 
-	var todocnv todos.Todos
-	todocnv.Activity = todo.Activity
-	todocnv.Date = todo.Date
-	todocnv.Status = todo.Status
-
-	err = th.srv.UpdateTodo(uint(idconv), todocnv)
+	err = th.srv.UpdateTodo(uint(idconv), TodoReqToEntity(todo))
 
 	if err != nil {
 		return c.JSON(500, helpers.ResponseFormat(500, "Server Error!", nil))

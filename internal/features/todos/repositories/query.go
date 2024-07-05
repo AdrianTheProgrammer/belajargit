@@ -38,10 +38,18 @@ func (tq *TodosQue) ReadAllTodos(userID uint) ([]todos.Todos, error) {
 	return ToAllTodosEntity(alltodos), nil
 }
 
-func (tq *TodosQue) UpdateTodo(todo todos.Todos) error {
-	todocnv := ToTodosData(todo)
-	err := tq.db.Save(&todocnv).Error
+func (tq *TodosQue) UpdateTodo(todoID uint, todo todos.Todos) error {
+	var UpdateTodo Todos
+	err := tq.db.Where("id = ?", todoID).First(&UpdateTodo).Error
+	if err != nil {
+		return err
+	}
 
+	UpdateTodo.Activity = todo.Activity
+	UpdateTodo.Date = todo.Date
+	UpdateTodo.Status = todo.Status
+
+	err = tq.db.Save(&UpdateTodo).Error
 	if err != nil {
 		return err
 	}
