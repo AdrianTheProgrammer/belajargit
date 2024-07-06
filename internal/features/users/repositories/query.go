@@ -10,7 +10,7 @@ type UsersQue struct {
 	db *gorm.DB
 }
 
-func NewUsersQue(connection *gorm.DB) users.Query {
+func NewUsersQue(connection *gorm.DB) users.UQuery {
 	return &UsersQue{
 		db: connection,
 	}

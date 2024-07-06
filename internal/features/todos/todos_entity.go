@@ -14,21 +14,21 @@ type Todos struct {
 	UserID   uint
 }
 
-type Handlers interface {
+type THandlers interface {
 	CreateTodo(echo.Context) error
 	ReadAllTodos(echo.Context) error
 	UpdateTodo(echo.Context) error
 	DeleteTodo(echo.Context) error
 }
 
-type Services interface {
+type TServices interface {
 	CreateTodo(Todos) error
 	ReadAllTodos(uint) ([]Todos, error)
 	UpdateTodo(uint, Todos) error
 	DeleteTodo(uint) error
 }
 
-type Query interface {
+type TQuery interface {
 	CreateTodo(Todos) error
 	ReadAllTodos(uint) ([]Todos, error)
 	UpdateTodo(uint, Todos) error

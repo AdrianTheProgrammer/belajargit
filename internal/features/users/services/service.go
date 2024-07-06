@@ -6,12 +6,12 @@ import (
 )
 
 type UsersServices struct {
-	qry users.Query
+	qry users.UQuery
 	pu  utils.PassUtilInterface
 	tu  utils.TokenUtilInterface
 }
 
-func NewUsersSer(q users.Query, p utils.PassUtilInterface, t utils.TokenUtilInterface) users.Services {
+func NewUsersSer(q users.UQuery, p utils.PassUtilInterface, t utils.TokenUtilInterface) users.UServices {
 	return &UsersServices{
 		qry: q,
 		pu:  p,

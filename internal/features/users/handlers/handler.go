@@ -8,10 +8,10 @@ import (
 )
 
 type UsersHand struct {
-	srv users.Services
+	srv users.UServices
 }
 
-func NewUsersHand(s users.Services) users.Handlers {
+func NewUsersHand(s users.UServices) users.UHandlers {
 	return &UsersHand{
 		srv: s,
 	}

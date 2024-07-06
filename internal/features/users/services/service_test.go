@@ -14,7 +14,7 @@ import (
 )
 
 func TestRegister(t *testing.T) {
-	qry := mocks.NewQuery(t)
+	qry := mocks.NewUQuery(t)
 	pu := mocks.NewPassUtilInterface(t)
 	tu := mocks.NewTokenUtilInterface(t)
 	srv := services.NewUsersSer(qry, pu, tu)
@@ -71,7 +71,7 @@ func TestRegister(t *testing.T) {
 }
 
 func TestLogin(t *testing.T) {
-	qry := mocks.NewQuery(t)
+	qry := mocks.NewUQuery(t)
 	pu := mocks.NewPassUtilInterface(t)
 	tu := mocks.NewTokenUtilInterface(t)
 	srv := services.NewUsersSer(qry, pu, tu)

@@ -10,17 +10,17 @@ type Users struct {
 	Phone    string
 }
 
-type Handlers interface {
+type UHandlers interface {
 	Register(echo.Context) error
 	Login(echo.Context) error
 }
 
-type Services interface {
+type UServices interface {
 	Register(Users) error
 	Login(string, string) (Users, string, error)
 }
 
-type Query interface {
+type UQuery interface {
 	Register(Users) error
 	Login(string) (Users, error)
 }

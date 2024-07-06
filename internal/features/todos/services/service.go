@@ -5,10 +5,10 @@ import (
 )
 
 type TodosServices struct {
-	qry todos.Query
+	qry todos.TQuery
 }
 
-func NewTodosSer(q todos.Query) todos.Services {
+func NewTodosSer(q todos.TQuery) todos.TServices {
 	return &TodosServices{
 		qry: q,
 	}

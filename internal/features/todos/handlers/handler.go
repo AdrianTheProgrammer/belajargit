@@ -12,11 +12,11 @@ import (
 )
 
 type TodosHand struct {
-	srv todos.Services
+	srv todos.TServices
 	tu  utils.TokenUtilInterface
 }
 
-func NewTodosHand(s todos.Services, t utils.TokenUtilInterface) todos.Handlers {
+func NewTodosHand(s todos.TServices, t utils.TokenUtilInterface) todos.THandlers {
 	return &TodosHand{
 		srv: s,
 		tu:  t,
