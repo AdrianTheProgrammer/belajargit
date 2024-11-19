@@ -16,11 +16,23 @@ type Handlers interface {
 }
 
 type Services interface {
-	Register(Users) error
-	Login(string, string) (Users, string, error)
+	Register(Users) (int, error)
+	Login(string, string) (Users, string, int, error)
 }
 
 type Query interface {
 	Register(Users) error
 	Login(string) (Users, error)
+}
+
+type RegisterValidate struct {
+	Username string `validate:"required"`
+	Password string `validate:"required,min=6,alphanum"`
+	Email    string `validate:"required"`
+	Phone    string `validate:"required"`
+}
+
+type LoginValidate struct {
+	Username string `validate:"required"`
+	Password string `validate:"required,min=6,alphanum"`
 }

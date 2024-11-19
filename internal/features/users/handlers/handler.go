@@ -22,13 +22,13 @@ func (uh *UsersHand) Register(c echo.Context) error {
 
 	err := c.Bind(&user)
 	if err != nil {
+		c.Logger().Error("register parse error:", err.Error())
 		return c.JSON(400, helpers.ResponseFormat(400, "Input Error!", nil))
 	}
 
-	err = uh.srv.Register(ToRepoUsers(user))
-
-	if err != nil {
-		return c.JSON(500, helpers.ResponseFormat(500, "Server Error!", nil))
+	errCode, errMsg := uh.srv.Register(ToRepoUsers(user))
+	if errMsg != nil {
+		return c.JSON(errCode, helpers.ResponseFormat(errCode, errMsg.Error(), nil))
 	}
 
 	return c.JSON(201, helpers.ResponseFormat(201, "Data Inserted Successfully!", nil))
@@ -39,13 +39,13 @@ func (uh *UsersHand) Login(c echo.Context) error {
 
 	err := c.Bind(&user)
 	if err != nil {
+		c.Logger().Error("login parse error:", err.Error())
 		return c.JSON(400, helpers.ResponseFormat(400, "Input Error!", nil))
 	}
 
-	result, token, err := uh.srv.Login(user.Username, user.Password)
-
-	if err != nil {
-		return c.JSON(404, helpers.ResponseFormat(404, "User Not Found!", nil))
+	result, token, errCode, errMsg := uh.srv.Login(user.Username, user.Password)
+	if errMsg != nil {
+		return c.JSON(errCode, helpers.ResponseFormat(errCode, errMsg.Error(), nil))
 	}
 
 	return c.JSON(200, helpers.ResponseFormat(200, "Login Success!", ToLoginReponse(result, token)))
